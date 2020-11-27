@@ -76,6 +76,14 @@ BASE_URL = "https://gdcportalgw.its-mo.com/api_v190426_NE/gdc/"
 
 log = logging.getLogger(__name__)
 
+# urllib3 added a default User-Agent when one is not specified, there is no
+# documented way to bypass this, so this looks like the only option.
+original_putheader = requests.urllib3.connection._HTTPConnection.putheader
+def putheader(self, header, *values):
+    if header == "User-Agent":
+        return
+    return original_putheader(header, *values)
+requests.urllib3.connection._HTTPConnection.putheader = putheader
 
 # from http://stackoverflow.com/questions/17134100/python-blowfish-encryption
 def _PKCS5Padding(string):
