@@ -27,12 +27,12 @@ sleepsecs = 30     # Time to wait before polling Nissan servers for update
 
 
 def publish_info(info, client):
-    client.publish("leaf/remaining_km", info.battery_remaining_amount)
-    client.publish("leaf/is_charging", info.is_charging)
-    client.publish("leaf/is_quick_charging", info.is_quick_charging)
-    client.publish("leaf/is_connected", info.is_connected)
-    client.publish("leaf/is_connected_to_quick_charger", info.is_connected_to_quick_charger)
-    client.publish("leaf/battery_percent", info.battery_percent)
+    client.publish("leaf/remaining_km", info.battery_remaining_amount, retain=True)
+    client.publish("leaf/is_charging", info.is_charging, retain=True)
+    client.publish("leaf/is_quick_charging", info.is_quick_charging, retain=True)
+    client.publish("leaf/is_connected", info.is_connected, retain=True)
+    client.publish("leaf/is_connected_to_quick_charger", info.is_connected_to_quick_charger, retain=True)
+    client.publish("leaf/battery_percent", info.battery_percent, retain=True)
 
 
 def on_connect(client, userdata, flags, rc):
