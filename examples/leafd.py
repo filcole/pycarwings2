@@ -22,8 +22,6 @@ mqttuser = parser.get('mqtt', 'user')
 mqttpass = parser.get('mqtt', 'pass')
 mqtthost = parser.get('mqtt', 'host')
 region = parser.get('get-leaf-info', 'region')
-sleepsecs = 30     # Time to wait before polling Nissan servers for update
-
 
 
 def publish_info(info, client):
