@@ -71,21 +71,30 @@ dt = 3600
 t =  time.time() + 1
 key = None
 tkey = None
+retries = 6
+errstr = ''
 while run:
     if time.time() >= t:
+        print("requesting ...")
         t = time.time() + dt
         leaf_info = leaf.get_latest_battery_status()
         publish_info(leaf_info, client)
         key = leaf.request_update()
         tkey = t + 30
 
-    if tkey is not None and tkey > time.time():
+    if tkey is not None and time.time() > tkey:
         status = leaf.get_status_from_update(key)
         if status is None:
+            print("waiting ...")
             tkey = time.time() + 15
+            retries = retries - 1
+            if retries == 0:
+                errstr = 'Status could not be retrieved.'
+                break
         else:
             key = None
             tkey = None
+            retries = 6
             leaf_info = leaf.get_latest_battery_status()
             publish_info(leaf_info, client)
 
@@ -95,3 +104,4 @@ while run:
     time.sleep(1)
 
 client.loop_stop()
+sys.exit(errstr)
