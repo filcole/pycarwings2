@@ -75,7 +75,9 @@ retries = 6
 errstr = ''
 while run:
     if time.time() >= t:
-        print("requesting ...")
+        print("requesting ...", flush=True)
+        s.connect()
+        leaf = s.get_leaf()
         t = time.time() + dt
         leaf_info = leaf.get_latest_battery_status()
         publish_info(leaf_info, client)
@@ -85,7 +87,7 @@ while run:
     if tkey is not None and time.time() > tkey:
         status = leaf.get_status_from_update(key)
         if status is None:
-            print("waiting ...")
+            print("waiting ...", flush=True)
             tkey = time.time() + 15
             retries = retries - 1
             if retries == 0:
@@ -97,6 +99,7 @@ while run:
             retries = 6
             leaf_info = leaf.get_latest_battery_status()
             publish_info(leaf_info, client)
+            del leaf
 
     if (not run):
         break
